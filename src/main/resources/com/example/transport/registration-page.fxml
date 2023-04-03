@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.transport.fxControllers.RegistrationPage">
+    <children>
+        <TextField fx:id="loginField" layoutX="57.0" layoutY="46.0" prefHeight="25.0" prefWidth="188.0"
+                   promptText="login"/>
+        <TextField fx:id="nameField" layoutX="57.0" layoutY="85.0" prefHeight="25.0" prefWidth="188.0"
+                   promptText="name"/>
+        <TextField fx:id="surnameField" layoutX="57.0" layoutY="119.0" prefHeight="25.0" prefWidth="188.0"
+                   promptText="surname"/>
+        <PasswordField fx:id="pswField" layoutX="57.0" layoutY="158.0" prefHeight="25.0" prefWidth="188.0"
+                       promptText="password"/>
+        <PasswordField fx:id="repPswField" layoutX="57.0" layoutY="200.0" prefHeight="25.0" prefWidth="188.0"
+                       promptText="repeat password"/>
+        <DatePicker fx:id="bDateField" layoutX="57.0" layoutY="249.0" promptText="birth date"/>
+        <TextField fx:id="managerEmailField" layoutX="298.0" layoutY="119.0" promptText="manager email"/>
+        <TextField fx:id="phoneNumberField" layoutX="57.0" layoutY="290.0" prefHeight="25.0" prefWidth="188.0"
+                   promptText="phone number"/>
+        <RadioButton fx:id="radioD" layoutX="298.0" layoutY="50.0" mnemonicParsing="false" onAction="#disableFields"
+                     text="Driver">
+            <toggleGroup>
+                <ToggleGroup fx:id="userType"/>
+            </toggleGroup>
+        </RadioButton>
+        <RadioButton fx:id="radioM" layoutX="298.0" layoutY="76.0" mnemonicParsing="false" onAction="#disableFields"
+                     text="Manager" toggleGroup="$userType"/>
+        <CheckBox fx:id="isAdminChk" layoutX="480.0" layoutY="123.0" mnemonicParsing="false" text="Is admin"/>
+        <DatePicker fx:id="medCerDateField" layoutX="298.0" layoutY="158.0" promptText="meed certificate date"/>
+        <TextField fx:id="medCerNumField" layoutX="298.0" layoutY="200.0" promptText="med certificate number"/>
+        <TextField fx:id="driveLicField" layoutX="300.0" layoutY="249.0" promptText="driver license"/>
+        <Button layoutX="57.0" layoutY="353.0" mnemonicParsing="false" onAction="#createNewUser" text="Create"/>
+        <Button layoutX="190.0" layoutY="353.0" mnemonicParsing="false" onAction="#returnToPrevious" text="Return"/>
+    </children>
+</AnchorPane>

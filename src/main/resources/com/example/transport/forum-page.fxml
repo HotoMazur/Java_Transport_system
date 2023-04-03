@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.transport.fxControllers.ForumPage">
+    <children>
+        <ListView fx:id="listForum" layoutX="14.0" layoutY="11.0" onMouseClicked="#goToComments" prefHeight="374.0"
+                  prefWidth="236.0">
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#addNewTitlesOnForum" text="Add new"/>
+                        <MenuItem mnemonicParsing="false" onAction="#updateTitlesOnForum" text="Update"/>
+                        <MenuItem mnemonicParsing="false" onAction="#deleteTitlesOnForum" text="Delete"/>
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+        </ListView>
+        <TreeView fx:id="commentTree" layoutX="288.0" layoutY="11.0" prefHeight="200.0" prefWidth="295.0">
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Unspecified Action"/>
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+        </TreeView>
+        <TextArea fx:id="commentBody" layoutX="288.0" layoutY="228.0" prefHeight="125.0" prefWidth="295.0"/>
+        <Button layoutX="288.0" layoutY="361.0" mnemonicParsing="false" onAction="#addComment" prefHeight="26.0"
+                prefWidth="54.0" text="Add"/>
+        <Button layoutX="357.0" layoutY="361.0" mnemonicParsing="false" onAction="#updateComment" text="Update"/>
+        <Button layoutX="426.0" layoutY="361.0" mnemonicParsing="false" onAction="#deleteComment" text="Delete"/>
+    </children>
+</AnchorPane>
