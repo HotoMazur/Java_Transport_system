@@ -123,11 +123,11 @@ public class DbUtils {
     public static ObservableList<CheckPoint> getDataCheckpoint(Destination selectedDestination) throws SQLException {
         Connection conn = connectToDb();
         ObservableList<CheckPoint> list = FXCollections.observableArrayList();
-        PreparedStatement psCheckpoint = conn.prepareStatement("SELECT id, title, longStop, dateArrived FROM Checkpoint WHERE destination_id=?");
+        PreparedStatement psCheckpoint = conn.prepareStatement("SELECT id, title, long_stop, date_arrived FROM fullstack.checkpoint WHERE id_destination=?");
         psCheckpoint.setInt(1, selectedDestination.getId());
         ResultSet rs = psCheckpoint.executeQuery();
         while (rs.next()) {
-            list.add(new CheckPoint(rs.getInt("id"), rs.getString("title"), rs.getBoolean("longStop"), LocalDate.parse(rs.getString("dateArrived"))));
+            list.add(new CheckPoint(rs.getInt("id"), rs.getString("title"), rs.getBoolean("long_stop"), LocalDate.parse(rs.getString("date_arrived"))));
         }
         disconnection(conn, psCheckpoint);
         return list;
