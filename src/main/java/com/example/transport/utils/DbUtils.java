@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class DbUtils {
     public static Connection connectToDb() {
         Connection connection = null;
-        String DB_URL = "jdbc:mysql://localhost:3306/transport_system";
+        String DB_URL = "jdbc:mysql://localhost:3306/fullstack";
         String USER = "root";
         String PASS = "";
         try {
@@ -37,7 +37,7 @@ public class DbUtils {
 
     public static User validateUser(String login, String password) throws SQLException {
         Connection connection = connectToDb();
-        String sql = "SELECT * FROM users WHERE login=? AND password=?";
+        String sql = "SELECT * FROM user WHERE login=? AND password=?";
         PreparedStatement preparedStatementUser = connection.prepareStatement(sql);
         preparedStatementUser.setString(1, login);
         preparedStatementUser.setString(2, password);
@@ -59,11 +59,11 @@ public class DbUtils {
         ObservableList<Driver> list = FXCollections.observableArrayList();
         PreparedStatement ps;
         try {
-            ps = connection.prepareStatement("select * from users WHERE usertype = 'driver'");
+            ps = connection.prepareStatement("select * from user WHERE usertype = 'driver'");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                list.add(new Driver(rs.getInt("id"), rs.getString("login"), rs.getString("password"), rs.getString("name"), rs.getString("surname"), rs.getDate("birth_date").toLocalDate(), rs.getString("phone_number"), rs.getDate("med_date").toLocalDate(), rs.getString("med_num"), rs.getString("driver_license")));
+                list.add(new Driver(rs.getInt("id"), rs.getString("login"), rs.getString("password"), rs.getString("name"), rs.getString("surname"), rs.getDate("birth_date").toLocalDate(), rs.getString("phone_number"), Date.valueOf(rs.getString("med_date")).toLocalDate(), rs.getString("med_num"), rs.getString("driver_license")));
 
             }
         } catch (SQLException e) {
@@ -78,11 +78,11 @@ public class DbUtils {
         ObservableList<Manager> list = FXCollections.observableArrayList();
         PreparedStatement ps;
         try {
-            ps = connection.prepareStatement("select * from users WHERE usertype = 'manager'");
+            ps = connection.prepareStatement("select * from user WHERE usertype = 'manager'");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                list.add(new Manager(rs.getInt("id"), rs.getString("login"), rs.getString("password"), rs.getString("name"), rs.getString("surname"), rs.getDate("birth_date").toLocalDate(), rs.getString("phone_number"), rs.getString("email"), rs.getDate("employment_date").toLocalDate(), rs.getBoolean("is_admin")));
+                list.add(new Manager(rs.getInt("id"), rs.getString("login"), rs.getString("password"), rs.getString("name"), rs.getString("surname"), rs.getDate("birth_date").toLocalDate(), rs.getString("phone_number"), rs.getString("email"), Date.valueOf(rs.getString("employment_date")).toLocalDate(), rs.getBoolean("is_admin")));
 
             }
         } catch (SQLException e) {
@@ -96,11 +96,11 @@ public class DbUtils {
     public static ObservableList<Cargo> getDataCargo() throws SQLException {
         Connection conn = connectToDb();
         ObservableList<Cargo> list = FXCollections.observableArrayList();
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM Cargo WHERE destination_id IS NULL");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM fullstack.cargo WHERE cargo.id_destination IS NULL");
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             list.add(new Cargo(rs.getInt("id"), rs.getString("title"),
-                    rs.getDouble("weight"), getCargoTypeFromString(rs.getString("cargoType")),
+                    rs.getDouble("weight"), getCargoTypeFromString(rs.getString("cargo_type")),
                     rs.getString("description"), rs.getString("customer")));
         }
         disconnection(conn, ps);
@@ -136,10 +136,10 @@ public class DbUtils {
     public static ObservableList<Destination> getDataDestination() throws SQLException {
         Connection conn = connectToDb();
         ObservableList<Destination> list = FXCollections.observableArrayList();
-        PreparedStatement psDestination = conn.prepareStatement("SELECT * FROM Destination");
+        PreparedStatement psDestination = conn.prepareStatement("SELECT * FROM fullstack.destination");
         ResultSet rsDestination = psDestination.executeQuery();
         while (rsDestination.next()) {
-            list.add(new Destination(rsDestination.getInt("id"), rsDestination.getString("startCity"), rsDestination.getLong("startLn"), rsDestination.getLong("startLat"), rsDestination.getString("endCity"), rsDestination.getLong("endLn"), rsDestination.getLong("endLat")));
+            list.add(new Destination(rsDestination.getInt("id"), rsDestination.getString("start_city"), rsDestination.getLong("start_ln"), rsDestination.getLong("start_lat"), rsDestination.getString("end_city"), rsDestination.getLong("end_ln"), rsDestination.getLong("end_lat")));
         }
         rsDestination.close();
         DbUtils.disconnection(conn, psDestination);
@@ -149,10 +149,10 @@ public class DbUtils {
     public static ObservableList<Truck> getDataTruck() throws ClassNotFoundException, SQLException {
         Connection conn = DbUtils.connectToDb();
         ObservableList<Truck> list = FXCollections.observableArrayList();
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM Truck WHERE destination_id IS NULL");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM fullstack.truck WHERE truck.id_destination IS NULL");
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            list.add(new Truck(rs.getInt("id"), rs.getString("make"), rs.getString("model"), rs.getInt("year"), rs.getDouble("odometer"), rs.getDouble("fuelTankCapacity"), getTyreTypeFromString(rs.getString("tyreType"))));
+            list.add(new Truck(rs.getInt("id"), rs.getString("make"), rs.getString("model"), rs.getInt("year"), rs.getDouble("odometer"), rs.getDouble("fuel_tank_capacity"), getTyreTypeFromString(rs.getString("tyre_type"))));
         }
         DbUtils.disconnection(conn, ps);
         return list;

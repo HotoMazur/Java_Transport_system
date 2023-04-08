@@ -30,17 +30,17 @@ import static com.example.transport.utils.fxUtils.updateItem;
 
 
 public class MainPage implements Initializable {
-    private final String UPDATE_DRIVER = "UPDATE users SET name=?, surname=?, med_num=? ,driver_license=?, phone_number = ? WHERE login = ?";
-    private final String UPDATE_MANAGER = "UPDATE users SET name=?, surname=?, phone_number = ?, email=? WHERE login = ?";
-    private final String INSERT_CARGO = "INSERT INTO Cargo(title, dateCreated, weight, cargoType, description, customer) VALUES (?,?,?,?,?,?)";
-    private final String UPDATE_CARGO = "UPDATE Cargo SET title=?, weight=?, cargoType=? ,description=?, customer = ?  WHERE id = ?";
-    private final String UPDATE_DESTINATION = "UPDATE Destination SET startCity=?, startLn=?, startLat=?, endCity=?, endLn=?, endLat=?, dateUpdated=?, truck_id=?, cargo_id=?, manager_id=? WHERE id=?";
+    private final String UPDATE_DRIVER = "UPDATE user SET name=?, surname=?, med_num=? ,driver_license=?, phone_number = ? WHERE login = ?";
+    private final String UPDATE_MANAGER = "UPDATE user SET name=?, surname=?, phone_number = ?, email=? WHERE login = ?";
+    private final String INSERT_CARGO = "INSERT INTO fullstack.cargo(title, date_create, weight, cargo_type, description, customer) VALUES (?,?,?,?,?,?)";
+    private final String UPDATE_CARGO = "UPDATE fullstack.cargo SET title=?, weight=?, cargo_type=? ,description=?, customer = ?  WHERE id = ?";
+    private final String UPDATE_DESTINATION = "UPDATE fullstack.destination SET start_city=?, start_ln=?, start_lat=?, end_city=?, end_ln=?, end_lat=?, date_updated=?, id_truck=?, id_cargo=?, id_responsible_manager=? WHERE id=?";
     private final String INSERT_CHECKPOINT = "INSERT INTO Checkpoint(title, longStop, dateArrived, destination_id) VALUE (?,?,?,?)";
-    private static final String UPDATE_CARGO_ID = "UPDATE Cargo SET destination_id=? WHERE id=?";
-    private static final String INSERT_DESTINATION = "INSERT INTO Destination(startCity, startLn, startLat, endCity, endLn, endLat, dateCreated, truck_id, cargo_id, manager_id) VALUES (?,?,?,?,?,?,?,?,?,?)";
-    private static final String UPDATE_TRUCK_ID = "UPDATE Truck SET destination_id=? WHERE id=?";
-    private static final String INSERT_TRUCK = "INSERT INTO Truck(make, model, year, odometer, fuelTankCapacity, tyreType) VALUES (?,?,?,?,?,?)";
-    private static final String UPDATE_TRUCK = "UPDATE Truck SET make=?, model=?, year=? ,odometer=?, fuelTankCapacity = ?  WHERE id = ?";
+    private static final String UPDATE_CARGO_ID = "UPDATE fullstack.cargo SET id_destination=? WHERE id=?";
+    private static final String INSERT_DESTINATION = "INSERT INTO fullstack.destination(start_city, start_ln, start_lat, end_city, end_ln, end_lat, date_created, id_truck, id_cargo, id_responsible_manager) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    private static final String UPDATE_TRUCK_ID = "UPDATE fullstack.truck SET id_destination=? WHERE id=?";
+    private static final String INSERT_TRUCK = "INSERT INTO fullstack.truck(make, model, year, odometer, fuel_tank_capacity, tyre_type) VALUES (?,?,?,?,?,?)";
+    private static final String UPDATE_TRUCK = "UPDATE fullstack.truck SET make=?, model=?, year=? ,odometer=?, fuel_tank_capacity = ?  WHERE id = ?";
 
     @FXML
     public TextField makeField;
@@ -220,7 +220,7 @@ public class MainPage implements Initializable {
         Connection connection = DbUtils.connectToDb();
         if (selectedTruck != null) {
             int idDriver = selectedTruck.getId();
-            PreparedStatement truckStmt = connection.prepareStatement("DELETE FROM Truck WHERE id=?");
+            PreparedStatement truckStmt = connection.prepareStatement("DELETE FROM fullstack.truck WHERE id=?");
             truckStmt.setInt(1, idDriver);
             truckStmt.executeUpdate();
             DbUtils.disconnection(connection, truckStmt);
@@ -320,7 +320,7 @@ public class MainPage implements Initializable {
         if (selectedCargo != null) {
             int idCargo = selectedCargo.getId();
             System.out.println(idCargo);
-            PreparedStatement cargoStmt = conn.prepareStatement("DELETE FROM Cargo WHERE id=?");
+            PreparedStatement cargoStmt = conn.prepareStatement("DELETE FROM fullstack.cargo WHERE id=?");
             cargoStmt.setInt(1, idCargo);
             cargoStmt.executeUpdate();
             DbUtils.disconnection(conn, cargoStmt);
@@ -347,21 +347,21 @@ public class MainPage implements Initializable {
                 selectedCargoField.getValue());
         Connection conn = DbUtils.connectToDb();
 
-        PreparedStatement psCargo = conn.prepareStatement("SELECT id FROM Cargo WHERE id=?");
+        PreparedStatement psCargo = conn.prepareStatement("SELECT id FROM fullstack.cargo WHERE id=?");
         psCargo.setInt(1, destination.getCargo().getId());
         ResultSet rsCargo = psCargo.executeQuery();
         int idCargo = rsCargo.next() ? rsCargo.getInt("id") : 0;
         rsCargo.close();
         psCargo.close();
 
-        PreparedStatement psTruck = conn.prepareStatement("SELECT id FROM Truck WHERE id=?");
+        PreparedStatement psTruck = conn.prepareStatement("SELECT id FROM fullstack.truck WHERE id=?");
         psTruck.setInt(1, destination.getTruck().getId());
         ResultSet rsTruck = psTruck.executeQuery();
         int idTruck = rsTruck.next() ? rsTruck.getInt("id") : 0;
         rsTruck.close();
         psTruck.close();
 
-        PreparedStatement psManager = conn.prepareStatement("SELECT id FROM users WHERE id=? AND usertype='manager'");
+        PreparedStatement psManager = conn.prepareStatement("SELECT id FROM user WHERE id=? AND usertype='manager'");
         psManager.setInt(1, destination.getResponsibleManager().getId());
         ResultSet rsManager = psManager.executeQuery();
         int idManager = rsManager.next() ? rsManager.getInt("id") : 0;
@@ -382,7 +382,7 @@ public class MainPage implements Initializable {
         psDestination.execute();
         psDestination.close();
 
-        PreparedStatement psDestinationGet = conn.prepareStatement("SELECT id FROM Destination WHERE truck_id=? AND cargo_id=?");
+        PreparedStatement psDestinationGet = conn.prepareStatement("SELECT id FROM fullstack.destination WHERE id_truck=? AND id_cargo=?");
         psDestinationGet.setInt(1, idTruck);
         psDestinationGet.setInt(2, idCargo);
         ResultSet rsDestinationGet = psDestinationGet.executeQuery();
@@ -680,7 +680,7 @@ public class MainPage implements Initializable {
         Manager selectedManager = manager_view.getSelectionModel().getSelectedItem();
         if (selectedDriver != null) {
             String loginDriver = selectedDriver.getLogin();
-            PreparedStatement driverStmt = connection.prepareStatement("DELETE FROM users WHERE login=?");
+            PreparedStatement driverStmt = connection.prepareStatement("DELETE FROM user WHERE login=?");
             driverStmt.setString(1, loginDriver);
             try {
                 connection.setAutoCommit(false);
@@ -698,7 +698,7 @@ public class MainPage implements Initializable {
             }
         } else {
             String loginManager = selectedManager.getLogin();
-            PreparedStatement managerStmt = connection.prepareStatement("DELETE FROM users WHERE login=?");
+            PreparedStatement managerStmt = connection.prepareStatement("DELETE FROM user WHERE login=?");
             managerStmt.setString(1, loginManager);
             connection.setAutoCommit(false);
             try {

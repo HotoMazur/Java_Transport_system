@@ -17,10 +17,10 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class RegistrationPage implements Initializable {
-    private final String EXISTING_USER_QUERY = "(Select * FROM users WHERE login=?)";
+    private final String EXISTING_USER_QUERY = "(Select * FROM user WHERE login=?)";
     String insertDriver = "INSERT INTO drivers(login, password, name, surname, birth_date, med_date, med_num, driver_license, phone_num) VALUES (?,?,?,?,?,?,?,?,?)";
-    String INSERT_DRIVER = "INSERT INTO users(login, password, name, surname, birth_date, phone_number, med_date, med_num, driver_license, usertype) VALUES (?,?,?,?,?,?,?,?,?,?)";
-    String INSERT_MANAGER = "INSERT INTO users(login, password, name, surname, birth_date, phone_number, email, employment_date, is_admin, usertype) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    String INSERT_DRIVER = "INSERT INTO user(login, password, name, surname, birth_date, phone_number, med_date, med_num, driver_license, usertype) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    String INSERT_MANAGER = "INSERT INTO user(login, password, name, surname, birth_date, phone_number, email, employment_date, is_admin, usertype) VALUES (?,?,?,?,?,?,?,?,?,?)";
     String insertManager = "INSERT INTO managers(login, password, name, surname, birth_date, phone_number, email, employment_date, is_admin) VALUES (?,?,?,?,?,?,?,?,?)";
     public TextField loginField;
     public TextField nameField;
